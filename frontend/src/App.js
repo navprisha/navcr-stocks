@@ -1,12 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import protobuf from 'protobufjs';
 import './App.css';
+import Subscription from './Subscription';
 
 const protoPath = 'ticker.proto';
 
 function App() {
   const [tickers, setTickers] = useState([]);
   const [tickerProto, setTickerProto] = useState(null);
+  const [subscriptions, setSubscriptions] = useState([]);
+
+  const handleSubscriptionChange = (newSubscriptions) => {
+    setSubscriptions(newSubscriptions);
+  };
 
   useEffect(() => {
     async function loadProto() {
@@ -22,14 +28,14 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (!tickerProto) return;
+    if (!tickerProto || subscriptions.length === 0) return;
 
     const ws = new WebSocket(`ws://${window.location.host}/ws`);
     ws.binaryType = 'arraybuffer';
 
     ws.onopen = () => {
       console.log('WebSocket connected');
-      ws.send('["BTC-USD","ETH-USD","EUR=X"]');
+      ws.send(JSON.stringify(subscriptions));
     };
 
     ws.onmessage = (event) => {
@@ -68,13 +74,14 @@ function App() {
     return () => {
       ws.close();
     };
-  }, [tickerProto]);
+  }, [tickerProto, subscriptions]);
 
   return (
     <div className="App">
       <header className="App-header">
         <h1>Yahoo Finance Streamer</h1>
       </header>
+      <Subscription onSubscriptionChange={handleSubscriptionChange} />
       <div className="ticker-container">
         <table>
           <thead>

@@ -1,5 +1,7 @@
 package com.example.yahoofinancestreamer.controller;
 
+import com.example.yahoofinancestreamer.dto.TickerDto;
+import com.example.yahoofinancestreamer.mapper.TickerMapper;
 import com.example.yahoofinancestreamer.proto.TickerProto;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
@@ -14,6 +16,7 @@ public class TickerController {
     }
 
     public void sendTicker(TickerProto.Ticker ticker) {
-        this.template.convertAndSend("/topic/tickers", ticker);
+        TickerDto tickerDto = TickerMapper.toDto(ticker);
+        this.template.convertAndSend("/topic/tickers", tickerDto);
     }
 }

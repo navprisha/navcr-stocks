@@ -45,8 +45,8 @@ public class YahooWebSocketHandler extends TextWebSocketHandler {
             byte[] decodedPayload = Base64.getDecoder().decode(message.getPayload());
             com.example.yahoofinancestreamer.proto.TickerProto.Ticker ticker = com.example.yahoofinancestreamer.proto.TickerProto.Ticker.parseFrom(decodedPayload);
             tickerController.sendTicker(ticker);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-            logger.error("Error parsing protobuf message", e);
+        } catch (Exception e) {
+            logger.error("Error processing message: " + message.getPayload(), e);
         }
     }
 

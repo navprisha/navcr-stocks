@@ -15,7 +15,7 @@ public class SubscriptionService {
     @PostConstruct
     public void init() {
         // Initialize with a default set of stock symbols
-        subscriptions.addAll(Arrays.asList("TSLA", "AAPL", "GOOGL"));
+        subscriptions.addAll(Arrays.asList("TSLA", "AAPL", "GOOGL", "SHEL.L", "BP.L", "HSBA.L", "AZN.L"));
     }
 
     public List<String> getSubscriptions() {
